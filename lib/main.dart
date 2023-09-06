@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
 
-main(){
+main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     title: "NoteKeeper",

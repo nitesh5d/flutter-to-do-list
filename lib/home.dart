@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:notekeeper/edit_task.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -38,18 +39,19 @@ class _Home extends State<Home> {
   @override
   build(context) {
     return Scaffold(
+
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Column(
             children: [
               ListView.separated(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return Material(
-                    color: Colors
-                        .transparent, // Make sure Material is transparent
+                    color:
+                        Colors.transparent,
                     child: InkWell(
                       onTap: () {
                         setState(() {
@@ -58,16 +60,15 @@ class _Home extends State<Home> {
                                   ? Colors.red
                                   : Colors.amberAccent;
 
-                          priorityIcon =
-                          priorityIcon == Icons.album_sharp
+                          priorityIcon = priorityIcon == Icons.album_sharp
                               ? Icons.stars_rounded
                               : Icons.album_sharp;
                         });
                       },
-                      borderRadius: BorderRadius.circular(20),
-                      splashColor: Colors.black12, // Set splash color here
+                      borderRadius: BorderRadius.circular(10),
+                      splashColor: Colors.black12,
                       child: Container(
-                        decoration: BoxDecoration(color: Colors.transparent),
+                        decoration: const BoxDecoration(color: Colors.transparent),
                         child: ListTile(
                           leading: Container(
                             height: double.infinity,
@@ -80,7 +81,7 @@ class _Home extends State<Home> {
                           title: Text(title),
                           subtitle: Text(date),
                           trailing: IconButton(
-                            icon: Icon(Icons.delete_outlined),
+                            icon: const Icon(Icons.delete_outlined),
                             onPressed: () {},
                             splashColor: Colors.blue,
                           ),
@@ -104,9 +105,12 @@ class _Home extends State<Home> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         tooltip: "Add new Task.",
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => EditTask()));
+        },
       ),
     );
   }
