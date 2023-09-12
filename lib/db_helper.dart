@@ -1,19 +1,18 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class DBHelper{
-
+class DBHelper {
   Database? db;
   final tableName = 'tasks';
 
   DBHelper._privateConstructor();
   static final DBHelper instance = DBHelper._privateConstructor();
 
-  Future<Database> get getDatabase async =>  db != null? db! : await initializeDb();
+  Future<Database> get getDatabase async =>
+      db != null ? db! : await initializeDb();
 
   Future<void> createDb(Database database, int version) async {
-      await database.execute(
-          """
+    await database.execute("""
           CREATE TABLE $tableName(
           'id' INTEGER PRIMARY KEY,
           'title' TEXT NOT NULL,
@@ -22,20 +21,18 @@ class DBHelper{
           'createDate' INTEGER NOT NULL DEFAULT (cast(strftime('%s','now') as int)),
           'updateDate' INTEGER NOT NULL DEFAULT (cast(strftime('%s','now') as int))
           )
-          """
-      );
+          """);
   }
 
   Future<Database> initializeDb() async {
     return await openDatabase(
-        join(await getDatabasesPath(),"notekeeperMain.bd"),
+        join(await getDatabasesPath(), "notekeeperMain.bd"),
         version: 1,
         onCreate: createDb,
-        singleInstance: true
-    );
+        singleInstance: true);
   }
 
-  Future<int> insert(Map<String, dynamic> row) async{
+  Future<int> insert(Map<String, dynamic> row) async {
     Database db = await instance.getDatabase;
     return await db.insert(tableName, row);
   }
@@ -43,5 +40,20 @@ class DBHelper{
   Future<List<Map<String, dynamic>>> queryAll() async {
     Database db = await instance.getDatabase;
     return await db.query(tableName);
+  }
+
+  Future<List<Map<String, dynamic>>> queryByiD(int id) async {
+    Database db = await instance.getDatabase;
+    return await db.query(tableName, where: "id = ?", whereArgs: [id]);
+  }
+
+  Future<int> updateTask(Map<String, dynamic> row, int id) async {
+    Database db = await instance.getDatabase;
+    return await db.update(tableName, row, where: "id = ?", whereArgs: [id]);
+  }
+
+  Future<int> deleteTask(int id) async {
+    Database db = await instance.getDatabase;
+    return await db.delete(tableName, where: "id = ?", whereArgs: [id]);
   }
 }
