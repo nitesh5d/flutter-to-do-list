@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:notekeeper/db_helper.dart';
 import 'package:sqflite/sqflite.dart';
 import 'edit_task.dart';
+import 'home_logic.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -17,6 +18,8 @@ class _Home extends State<Home> {
   IconData priorityIcon = Icons.disc_full;
   List<dynamic>? items;
 
+  // var logic = HomeLogic();
+
   var db = DBHelper.instance;
 
   void getAllTodoList() async {
@@ -26,26 +29,22 @@ class _Home extends State<Home> {
     });
   }
 
-  IconData leadingIcon(priority){
-    if (priority == 2){
+  IconData leadingIcon(priority) {
+    if (priority == 2) {
       return Icons.timer_rounded;
-    }
-    else if (priority == 1){
+    } else if (priority == 1) {
       return Icons.safety_check_sharp;
-    }
-    else{
+    } else {
       return Icons.eco;
     }
   }
 
-  Color leadingColor(priority){
-    if (priority == 2){
+  Color leadingColor(priority) {
+    if (priority == 2) {
       return Colors.red;
-    }
-    else if (priority == 1){
+    } else if (priority == 1) {
       return Colors.orangeAccent;
-    }
-    else{
+    } else {
       return Colors.lightBlue;
     }
   }
@@ -198,11 +197,58 @@ class _Home extends State<Home> {
                                     items![index]['id'], getAllTodoList)));
                         getAllTodoList();
                       },
+                      onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => showTaskDialog(
+                                items![index]['title'],
+                              items![index]['desc'],
+                              leadingIcon(items![index]['priority']),
+                              leadingColor(items![index]['priority']),),
+                          );
+                      },
                     ),
                   ),
                 ),
               );
             },
           );
+  }
+
+  showTaskDialog(title, desc, icon, iconColor) {
+    return Dialog(
+      elevation: 8,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Container(
+        padding: EdgeInsets.only(top:20,bottom: 40,left: 20,right: 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  splashRadius: 20,
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(Icons.clear),
+                )
+              ],
+            ),
+            Icon(icon,color: iconColor, size: 68,),
+            SizedBox(height: 20,),
+            SizedBox(
+              width: double.maxFinite,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                Text(title,style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+                SizedBox(height: 10,),
+                Text(desc,style: TextStyle(fontSize: 18),),
+              ],),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

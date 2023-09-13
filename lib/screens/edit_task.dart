@@ -263,11 +263,16 @@ class _EditTask extends State<EditTask> {
                           ? const Color(0xffbef0ff)
                           : const Color(0xff10aec9)),
                   onPressed: () {
-                    formkey.currentState!.validate() ? updateTodo() : {};
-                    setState(() {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Successfully Updated!")));
-                    });
+                    if (formkey.currentState!.validate()){
+                      updateTodo();
+                      setState(() {
+                        titleControler.clear();
+                        descControler.clear();
+                        selectedPriority = 1;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Successfully Added!")));
+                      });
+                    }
                   },
                   child: const Padding(
                     padding: EdgeInsets.only(top: 13, bottom: 13),
@@ -282,7 +287,7 @@ class _EditTask extends State<EditTask> {
                           width: 12,
                         ),
                         Text(
-                          'SAVE',
+                          'UPDATE',
                           style: TextStyle(fontSize: 18),
                         ),
                       ],
@@ -305,13 +310,12 @@ class _EditTask extends State<EditTask> {
                         backgroundColor: delButtonPressed
                             ? const Color(0xffa12106)
                             : const Color(0xffe03714)),
-                    //   style: ButtonStyle(
-                    //       backgroundColor:
-                    //       delButtonPressed? MaterialStatePropertyAll<Color>(Color(0xffcf3313)):MaterialStatePropertyAll<Color>(Color(0xffe03714))),
                     onPressed: () {
                       deleteThisTodo(taskId);
                       Navigator.pop(context);
                       refreshFunc();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Task Deleted!")));
                     },
                     child: const Padding(
                       padding: EdgeInsets.only(top: 13, bottom: 13),
@@ -347,14 +351,16 @@ class _EditTask extends State<EditTask> {
                       ? const Color(0xffbef0ff)
                       : const Color(0xff10aec9)),
               onPressed: () {
-                formkey.currentState!.validate() ? insertTodo() : {};
-                setState(() {
-                  titleControler.clear();
-                  descControler.clear();
-                  selectedPriority = 1;
+                if (formkey.currentState!.validate()){
+                  insertTodo();
+                  setState(() {
+                    titleControler.clear();
+                    descControler.clear();
+                    selectedPriority = 1;
+                  });
                   ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Successfully Added!")));
-                });
+                      SnackBar(content: Text("Note added successfully!")));
+                }
               },
               child: const Padding(
                 padding: EdgeInsets.only(top: 13, bottom: 13),
